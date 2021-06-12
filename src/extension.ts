@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as lc from 'vscode-languageclient';
 
 import {ClangdContext} from './clangd-context';
 
@@ -26,6 +27,22 @@ export async function activate(context: vscode.ExtensionContext) {
 
   await clangdContext.activate(context.globalStoragePath, outputChannel,
                                context.workspaceState);
+
+  context.subscriptions.push(vscode.commands.registerCommand(
+    'clangd.action.showReferences',
+    async (argument: {
+      uri: string; position: lc.Position; locations: lc.Location[];
+    }) => {
+      const client = clangdContext.client;
+      if (client) {
+        await vscode.commands.executeCommand(
+          'editor.action.showReferences',
+          vscode.Uri.parse(argument.uri),
+          client.protocol2CodeConverter.asPosition(argument.position),
+          argument.locations.map(client.protocol2CodeConverter.asLocation),
+        );
+      }
+    }));
 
   const shouldCheck = vscode.workspace.getConfiguration('clangd').get(
       'detectExtensionConflicts');
