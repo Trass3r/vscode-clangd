@@ -342,6 +342,17 @@
                     "when": "clangd.ast.hasData"
                 }
             ]
-        }
+        },
+        "colors": [
+            {
+                "id": "clangd.inactiveRegions.background",
+                "description": "Background color of inactive code regions",
+                "defaults": {
+                    "dark": "#1212124C",
+                    "light": "#DCDCDC4C",
+                    "highContrast": "#FCFCFC4C"
+                }
+            }
+        ]
     }
 }
